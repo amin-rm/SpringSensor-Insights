@@ -2,6 +2,7 @@ package org.example.springsensorinsights.services;
 
 import org.example.springsensorinsights.entities.SensorData;
 import org.example.springsensorinsights.repositories.SensorDataRepository;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Value;
 import java.io.File;
@@ -22,6 +23,7 @@ public class SensorDataFilteringService {
         this.sensorDataRepository = sensorDataRepository;
     }
 
+    @Scheduled(fixedRate = 60000)
     public void filterCorrectReadingsAndSaveToCSV() {
         List<SensorData> allSensorData = sensorDataRepository.findAll();
         List<SensorData> correctReadings = allSensorData.stream()

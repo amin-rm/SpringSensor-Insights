@@ -3,6 +3,7 @@ package org.example.springsensorinsights.services;
 import jakarta.annotation.Resource;
 import org.example.springsensorinsights.entities.SensorData;
 import org.example.springsensorinsights.repositories.SensorDataRepository;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.util.StringUtils;
@@ -26,6 +27,7 @@ public class SensorDataProcessingService {
     @Resource
     private SensorDataRepository sensorDataRepository;
 
+    @Scheduled(initialDelay = 5000, fixedRate = 65000) // Run after 5 seconds, then every 65 seconds
     public void processCSVFiles() {
         try {
             List<Path> csvFiles = getCSVFilesFromDirectory(newDirectory);
