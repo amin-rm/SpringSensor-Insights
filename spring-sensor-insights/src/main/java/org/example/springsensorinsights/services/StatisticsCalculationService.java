@@ -13,7 +13,7 @@ public class StatisticsCalculationService {
         this.sensorDataRepository = sensorDataRepository;
     }
 
-    @Scheduled(fixedRate = 60000) // Run every minute, adjust as needed
+    @Scheduled(initialDelay = 10000, fixedRate = 70000) // Run after 10 seconds, then every 70 seconds
     public void calculateStatistics() {
         long totalReadings = sensorDataRepository.count();
         long correctReadings = sensorDataRepository.countByReadingIsCorrect(true);
