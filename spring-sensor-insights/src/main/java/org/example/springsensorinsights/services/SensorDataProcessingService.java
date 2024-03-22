@@ -1,6 +1,8 @@
 package org.example.springsensorinsights.services;
 
+import jakarta.annotation.Resource;
 import org.example.springsensorinsights.entities.SensorData;
+import org.example.springsensorinsights.repositories.SensorDataRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.util.StringUtils;
@@ -21,16 +23,20 @@ public class SensorDataProcessingService {
     @Value("${csv.directory.archived}")
     private String archivedDirectory;
 
+    @Resource
+    private SensorDataRepository sensorDataRepository;
+
     public void processCSVFiles() {
         try {
             List<Path> csvFiles = getCSVFilesFromDirectory(newDirectory);
             for (Path csvFile : csvFiles) {
                 List<SensorData> sensorDataList = readCSVFile(csvFile);
+                calculateIsCorrect(sensorDataList); // Calculate correctness before saving
                 saveToDatabase(sensorDataList);
                 moveFileToArchivedDirectory(csvFile);
             }
         } catch (IOException e) {
-            e.printStackTrace(); // Handle or log the exception appropriately
+            e.printStackTrace();
         }
     }
 
@@ -56,9 +62,17 @@ public class SensorDataProcessingService {
         return new SensorData(sensorId, reading, threshold);
     }
 
+    private void calculateIsCorrect(List<SensorData> sensorDataList) {
+        for (SensorData sensorData : sensorDataList) {
+            double threshold = sensorData.getThreshold();
+            double reading = sensorData.getReading();
+            boolean isCorrect = Math.abs(reading - threshold) <= 0.2 * threshold;
+            sensorData.setReadingIsCorrect(isCorrect);
+        }
+    }
+
     private void saveToDatabase(List<SensorData> sensorDataList) {
-        // Implement saving to database using Spring Data JPA or any other ORM framework
-        // Example: sensorDataRepository.saveAll(sensorDataList);
+        sensorDataRepository.saveAll(sensorDataList);
     }
 
     private void moveFileToArchivedDirectory(Path csvFile) throws IOException {
@@ -66,4 +80,5 @@ public class SensorDataProcessingService {
         Files.move(csvFile, Paths.get(archivedDirectory, fileName));
     }
 }
+
 
