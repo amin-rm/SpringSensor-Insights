@@ -22,7 +22,7 @@ The system manages sensor data stored in CSV files with three primary columns: s
 
 ## Getting Started
 1. Clone the repository: `git clone <repository-url>`
-2. Navigate to the project directory: `cd SpringSensor-Insights/`
+2. Navigate to the project directory: `cd SpringSensor-Insights/spring-sensor-insights`
 3. Build the project: `mvn clean install`
 4. Run the application: `mvn spring-boot:run`
 
