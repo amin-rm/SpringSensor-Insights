@@ -27,6 +27,7 @@ The system manages sensor data stored in CSV files with three primary columns: s
 4. Run the application: `mvn spring-boot:run`
 
 ## Usage
+- Create a MySQL database with the same name defined in application.properties to store the sensor data.
 - Utilize the `SensorDataGenerator` class's main method to generate test data and save it to the `sensorData/new` directory.
 - The application will autonomously process the data, persist it to the database, and move the files to the `sensorData/archived` directory.
 - Cron jobs are configured to automatically filter correct readings and store them in the `sensorData/filtered` directory, along with displaying statistics on correct readings.
