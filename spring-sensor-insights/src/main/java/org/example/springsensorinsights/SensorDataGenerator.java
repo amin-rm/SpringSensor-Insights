@@ -4,7 +4,16 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Random;
 
+/**
+ * Generates sample sensor data and saves it to a CSV file.
+ */
 public class SensorDataGenerator {
+
+    /**
+     * Generates sample sensor data and saves it to a CSV file.
+     *
+     * @param args The command-line arguments.
+     */
     public static void main(String[] args) {
         final String filePath = "SensordataCsv/new/sensor_data.csv";
         try {
@@ -31,3 +40,4 @@ public class SensorDataGenerator {
         }
     }
 }
+
