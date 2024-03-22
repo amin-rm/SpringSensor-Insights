@@ -11,18 +11,30 @@ import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * Service class responsible for filtering correct sensor readings and saving them to a CSV file.
+ */
 @Service
 public class SensorDataFilteringService {
 
-    @Value("${csv.directory.filtered}")
+    @Value("SensorDataCsv/filtered")
     private String filteredDirectory;
 
     private final SensorDataRepository sensorDataRepository;
 
+    /**
+     * Constructs a SensorDataFilteringService with the specified SensorDataRepository.
+     *
+     * @param sensorDataRepository The repository for accessing sensor data.
+     */
     public SensorDataFilteringService(SensorDataRepository sensorDataRepository) {
         this.sensorDataRepository = sensorDataRepository;
     }
 
+    /**
+     * Scheduled method to filter correct sensor readings and save them to a CSV file.
+     * Runs at a fixed rate of 60,000 milliseconds (1 minute).
+     */
     @Scheduled(fixedRate = 60000)
     public void filterCorrectReadingsAndSaveToCSV() {
         List<SensorData> allSensorData = sensorDataRepository.findAll();
@@ -32,12 +44,23 @@ public class SensorDataFilteringService {
         saveToCSV(correctReadings);
     }
 
+    /**
+     * Checks if a sensor reading is correct based on the threshold.
+     *
+     * @param sensorData The sensor data to check.
+     * @return True if the reading is correct, false otherwise.
+     */
     private boolean isCorrectReading(SensorData sensorData) {
         double threshold = sensorData.getThreshold();
         double reading = sensorData.getReading();
         return Math.abs(reading - threshold) <= 0.2 * threshold;
     }
 
+    /**
+     * Saves a list of sensor data to a CSV file in the filtered directory.
+     *
+     * @param sensorDataList The list of sensor data to save.
+     */
     private void saveToCSV(List<SensorData> sensorDataList) {
         try {
             File filteredDirectoryFile = new File(filteredDirectory);
