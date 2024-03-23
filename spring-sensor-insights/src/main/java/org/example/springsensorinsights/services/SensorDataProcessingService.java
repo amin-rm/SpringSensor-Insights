@@ -12,7 +12,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 import java.util.stream.Collectors;
-
+import org.springframework.util.StopWatch;
 /**
  * Service class responsible for processing sensor data files and saving them to the database.
  */
@@ -29,18 +29,22 @@ public class SensorDataProcessingService {
     private SensorDataRepository sensorDataRepository;
 
     /**
-     * Scheduled method to process CSV files containing sensor data.
+     * Scheduled method to process CSV files containing sensor data using java stream API.
      * Runs initially after 5 seconds, then at a fixed rate of 65,000 milliseconds (65 seconds).
      */
     @Scheduled(fixedRate = 60000)
     public void processCSVFiles() {
         try {
+            StopWatch stopWatch = new StopWatch();
+            stopWatch.start();
             List<Path> csvFiles = getCSVFilesFromDirectory(newDirectory);
             for (Path csvFile : csvFiles) {
                 List<SensorData> sensorDataList = readCSVFile(csvFile);
-                calculateIsCorrect(sensorDataList); // Calculate correctness before saving
+                calculateIsCorrect(sensorDataList);
                 saveToDatabase(sensorDataList);
                 moveFileToArchivedDirectory(csvFile);
+                stopWatch.stop();
+                System.out.println("Filtering readings using stream directly from the csv file: " + stopWatch.getTotalTimeSeconds() + " seconds");
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -122,6 +126,8 @@ public class SensorDataProcessingService {
         String fileName = csvFile.getFileName().toString();
         Files.move(csvFile, Paths.get(archivedDirectory, fileName));
     }
+
+
 }
 
 

@@ -50,11 +50,11 @@ public class SensorDataFilteringService {
         saveToCSV(correctReadings);
 
         stopWatch.stop();
-        System.out.println("Processing readings using stream: " + stopWatch.getTotalTimeSeconds() + " seconds");
+        System.out.println("Filtering readings using stream: " + stopWatch.getTotalTimeSeconds() + " seconds");
     }
 
     /**
-     * Scheduled method to filter correct sensor readings and save them to a CSV file using the Stream method.
+     * Scheduled method to filter correct sensor readings and save them to a CSV file using direct database call.
      * Runs at a fixed rate of 60,000 milliseconds (1 minute).
      */
     @Scheduled(initialDelay = 5000, fixedRate = 60000)
@@ -65,7 +65,7 @@ public class SensorDataFilteringService {
         long correctReadings = sensorDataRepository.countByReadingIsCorrect(true);
 
         stopWatch.stop();
-        System.out.println("Processing readings using direct access to the DB: " + stopWatch.getTotalTimeSeconds() + " seconds");
+        System.out.println("Filtering readings using direct access to the DB: " + stopWatch.getTotalTimeSeconds() + " seconds");
     }
 
     /**
