@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * Service class responsible for processing sensor data files.
+ * Service class responsible for processing sensor data files and saving them to the database.
  */
 @Service
 public class SensorDataProcessingService {
@@ -32,7 +32,7 @@ public class SensorDataProcessingService {
      * Scheduled method to process CSV files containing sensor data.
      * Runs initially after 5 seconds, then at a fixed rate of 65,000 milliseconds (65 seconds).
      */
-    @Scheduled(initialDelay = 5000, fixedRate = 65000)
+    @Scheduled(fixedRate = 60000)
     public void processCSVFiles() {
         try {
             List<Path> csvFiles = getCSVFilesFromDirectory(newDirectory);

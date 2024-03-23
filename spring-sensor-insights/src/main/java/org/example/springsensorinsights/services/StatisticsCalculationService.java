@@ -25,7 +25,7 @@ public class StatisticsCalculationService {
      * Scheduled method to calculate statistics on sensor data.
      * Runs initially after 10 seconds, then at a fixed rate of 70,000 milliseconds (70 seconds).
      */
-    @Scheduled(initialDelay = 10000, fixedRate = 70000)
+    @Scheduled(initialDelay = 10000, fixedRate = 65000)
     public void calculateStatistics() {
         long totalReadings = sensorDataRepository.count();
         long correctReadings = sensorDataRepository.countByReadingIsCorrect(true);
