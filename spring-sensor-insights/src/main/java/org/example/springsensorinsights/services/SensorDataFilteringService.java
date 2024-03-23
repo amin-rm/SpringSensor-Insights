@@ -10,9 +10,12 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
+import org.springframework.util.StopWatch;
 
 /**
- * Service class responsible for filtering correct sensor readings and saving them to a CSV file.
+ * Service class responsible for filtering correct sensor readings and saving them to a CSV file using two methods:
+ *  -- Java Stream
+ *  -- Direct access to the database
  */
 @Service
 public class SensorDataFilteringService {
@@ -32,16 +35,37 @@ public class SensorDataFilteringService {
     }
 
     /**
-     * Scheduled method to filter correct sensor readings and save them to a CSV file.
+     * Scheduled method to filter correct sensor readings and save them to a CSV file using the Stream method.
      * Runs at a fixed rate of 60,000 milliseconds (1 minute).
      */
-    @Scheduled(fixedRate = 60000)
+    @Scheduled(initialDelay = 1000, fixedRate = 60000)
     public void filterCorrectReadingsAndSaveToCSV() {
-        List<SensorData> allSensorData = sensorDataRepository.findAll();
-        List<SensorData> correctReadings = allSensorData.stream()
+        StopWatch stopWatch = new StopWatch();
+        stopWatch.start();
+
+        List<SensorData> correctReadings = sensorDataRepository.findAll()
+                .stream()
                 .filter(this::isCorrectReading)
-                .collect(Collectors.toList());
+                .toList();;
         saveToCSV(correctReadings);
+
+        stopWatch.stop();
+        System.out.println("Processing readings using stream: " + stopWatch.getTotalTimeSeconds() + " seconds");
+    }
+
+    /**
+     * Scheduled method to filter correct sensor readings and save them to a CSV file using the Stream method.
+     * Runs at a fixed rate of 60,000 milliseconds (1 minute).
+     */
+    @Scheduled(initialDelay = 5000, fixedRate = 60000)
+    public void filterCorrectReadingsAndSaveToCSV2() {
+        StopWatch stopWatch = new StopWatch();
+        stopWatch.start();
+
+        long correctReadings = sensorDataRepository.countByReadingIsCorrect(true);
+
+        stopWatch.stop();
+        System.out.println("Processing readings using direct access to the DB: " + stopWatch.getTotalTimeSeconds() + " seconds");
     }
 
     /**
