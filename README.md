@@ -32,5 +32,3 @@ The system manages sensor data stored in CSV files with three primary columns: s
 - The application will autonomously process the data, persist it to the database, and move the files to the `sensorData/archived` directory.
 - Cron jobs are configured to automatically filter correct readings and store them in the `sensorData/filtered` directory, along with displaying statistics on correct readings.
 
-## Contributors
-- [Ahmed Amine Romdhani](https://github.com/amine-rm)
